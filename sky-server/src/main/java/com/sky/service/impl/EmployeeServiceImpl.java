@@ -86,5 +86,13 @@ Page<Employee> page= employeeMapper.pageQuery(employeePageQueryDTO);
 long total=page.getTotal();
 return new PageResult(total,page.getResult());
     }
+@Override
+    public void startOrStop(Integer status, Long id) {
+        Employee employee = Employee.builder()
+                .status(status)
+                .id(id)
+                .build();
 
+        employeeMapper.update(employee);
+    }
 }
