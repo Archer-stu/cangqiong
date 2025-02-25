@@ -95,4 +95,18 @@ return new PageResult(total,page.getResult());
 
         employeeMapper.update(employee);
     }
+    @Override
+    public Employee getById(Long id) {
+        Employee employee=employeeMapper.getById(id);
+        employee.setPassword("****");
+        return employeeMapper.getById(id);
+    }
+    @Override
+    public void update(EmployeeDTO employeeDTO) {
+        Employee employee = new Employee();
+        BeanUtils.copyProperties(employeeDTO,employee);
+        employee.setUpdateUser(BaseContext.getCurrentId());
+        employee.setUpdateTime(LocalDateTime.now());
+       employeeMapper.update(employee);
+    }
 }

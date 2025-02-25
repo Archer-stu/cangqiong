@@ -14,6 +14,7 @@ import com.sky.vo.EmployeeLoginVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -100,5 +101,20 @@ log.info("启用禁用员工账号：id:{},status:{}",id,status);
 employeeService.startOrStop(status,id);
         return Result.success();
     }
-
+@GetMapping("/{id}")
+@ApiOperation("根据id查询员工数据")
+    public Result<Employee> getById(@PathVariable Long id)
+    {
+        log.info("根据id查询员工信息：{}",id);
+        Employee employee=employeeService.getById(id);
+        return Result.success(employee);
+    }
+    @ApiOperation("修改员工信息")
+    @PutMapping
+    public Result update(@RequestBody EmployeeDTO employeeDTO)
+    {
+        log.info("修改员工信息：{}",employeeDTO);
+        employeeService.update(employeeDTO);
+        return Result.success();
+    }
 }
