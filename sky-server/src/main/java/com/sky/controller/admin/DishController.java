@@ -27,8 +27,11 @@ public class DishController {
     return Result.success();
 }
 @GetMapping("/page")
+@ApiOperation("菜品分页查询")
 public Result<PageResult> page(DishPageQueryDTO dishPageQueryDTO)
 {
-return Result.success();
+    log.info("菜品分页查询：{}",dishPageQueryDTO);
+    PageResult pageResult= dishService.pageQuery(dishPageQueryDTO);
+return Result.success(pageResult);
 }
 }
