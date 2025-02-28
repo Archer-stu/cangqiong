@@ -63,6 +63,7 @@ return Result.success(pageResult);
         return Result.success();
     }
     @PostMapping("/status/{status}")
+    @ApiOperation("启用禁用菜品")
     public Result startOrStop(@PathVariable Integer status,Long id)
     {
         log.info("启用禁用菜品：id:{},status:{}",id,status);
