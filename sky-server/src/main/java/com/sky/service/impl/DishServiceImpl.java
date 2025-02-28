@@ -104,5 +104,10 @@ dishFlavorMapper.insertBatch(flavors);
         }
     }
 
+    @Override
+    public void startOrStop(Integer status, Long id) {
+        dishMapper.updateStatusById(status,id);
+    }
+
 
 }
