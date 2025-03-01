@@ -38,4 +38,6 @@ public interface DishMapper {
     void update(Dish dish);
 @Update("update dish set status=#{status} where id=#{id}")
     void updateStatusById(Integer status, Long id);
+@Select("select * from dish where category_id=#{categoryId} and status=#{status}")
+    List<Dish> list(Dish dish);
 }
