@@ -68,7 +68,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
     @Override
     public void save(EmployeeDTO employeeDTO) {
-      Employee employee = new Employee();
+        Employee employee = new Employee();
         BeanUtils.copyProperties(employeeDTO,employee);
         employee.setStatus(StatusConstant.ENABLE);
         //employee.setCreateTime(LocalDateTime.now());
@@ -82,11 +82,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     public PageResult pageQuery(EmployeePageQueryDTO employeePageQueryDTO) {
         PageHelper.startPage(employeePageQueryDTO.getPage(),employeePageQueryDTO.getPageSize());
 
-Page<Employee> page= employeeMapper.pageQuery(employeePageQueryDTO);
-long total=page.getTotal();
-return new PageResult(total,page.getResult());
+        Page<Employee> page= employeeMapper.pageQuery(employeePageQueryDTO);
+        long total=page.getTotal();
+        return new PageResult(total,page.getResult());
     }
-@Override
+    @Override
     public void startOrStop(Integer status, Long id) {
         Employee employee = Employee.builder()
                 .status(status)
@@ -107,6 +107,6 @@ return new PageResult(total,page.getResult());
         BeanUtils.copyProperties(employeeDTO,employee);
         //employee.setUpdateUser(BaseContext.getCurrentId());
         //employee.setUpdateTime(LocalDateTime.now());
-       employeeMapper.update(employee);
+        employeeMapper.update(employee);
     }
 }

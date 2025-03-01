@@ -23,6 +23,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -56,5 +58,53 @@ public class SetmealServiceImpl implements SetmealService {
      */
     public List<DishItemVO> getDishItemById(Long id) {
         return setmealMapper.getDishItemBySetmealId(id);
+    }
+
+    @Override
+    public PageResult page(SetmealPageQueryDTO setmealPageQueryDTO) {
+        PageHelper.startPage(setmealPageQueryDTO.getPage(),setmealPageQueryDTO.getPageSize());
+        Page<SetmealVO> list =setmealMapper.pageQuery(setmealPageQueryDTO);
+       return new PageResult(list.getTotal(),list);
+    }
+
+    @Override
+    public void saveWithDish(SetmealDTO setmealDTO) {
+        Setmeal setmeal = new Setmeal();
+        setmeal.setStatus(StatusConstant.DISABLE);
+        BeanUtils.copyProperties(setmealDTO,setmeal);
+        setmealMapper.insert(setmeal);
+        List<SetmealDish> list=setmealDTO.getSetmealDishes();
+setmealDishMapper.insert(list,setmeal.getId());
+    }
+
+    @Override
+    public SetmealVO getById(Long id) {
+        SetmealVO setmealVO = setmealMapper.getById(id);
+        setmealVO.setSetmealDishes(setmealDishMapper.getBySetmealId(id));
+
+        return setmealVO;
+    }
+
+    @Override
+    public void update(SetmealDTO setmealDTO) {
+        Setmeal setmeal = new Setmeal();
+        BeanUtils.copyProperties(setmealDTO,setmeal);
+        setmealMapper.update(setmeal);
+        List<SetmealDish> list = setmealDTO.getSetmealDishes();
+        List<Long> l=new ArrayList<>();
+        l.add(setmealDTO.getId());
+        setmealDishMapper.deleteBySetmealIds(l);
+        setmealDishMapper.insert(list,setmealDTO.getId());
+    }
+
+    @Override
+    public void startOrStop(Integer status, Long id) {
+        setmealMapper.updateStatusById(status,id);
+    }
+
+    @Override
+    public void deleteByIds(List<Long> ids) {
+       setmealMapper.deleteByIds(ids);
+        setmealDishMapper.deleteBySetmealIds(ids);
     }
 }
