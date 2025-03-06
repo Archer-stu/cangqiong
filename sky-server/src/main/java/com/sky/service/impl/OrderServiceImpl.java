@@ -5,9 +5,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.context.BaseContext;
-import com.sky.dto.OrdersPageQueryDTO;
-import com.sky.dto.OrdersPaymentDTO;
-import com.sky.dto.OrdersSubmitDTO;
+import com.sky.dto.*;
 import com.sky.entity.*;
 import com.sky.exception.AddressBookBusinessException;
 import com.sky.exception.OrderBusinessException;
@@ -98,7 +96,7 @@ public class OrderServiceImpl implements OrderService {
         for (Orders orders : page) {
             OrderVO orderVO=new OrderVO();
             BeanUtils.copyProperties(orders,orderVO);
-            String orderDishes=getsOrderDishes();
+            String orderDishes=getsOrderDishes(orders.getId());
             orderVO.setOrderDishes(orderDishes);
             orderVOList.add(orderVO);
         }
@@ -117,7 +115,39 @@ pageResult.setRecords(orderVOList);
 
     @Override
     public void confirm(Long id) {
-        orderMapper.changeStatusById(id,Orders.CONFIRMED);
+        orderMapper.update(Orders.builder().id(id).status(Orders.CONFIRMED).build());
+    }
+
+    @Override
+    public OrderVO details(Long id) {
+        OrderVO orderVO=new OrderVO() ;
+        Orders orders = orderMapper.getById(id);
+        List<OrderDetail> orderDetail = new ArrayList<>();
+        orderDetail = orderDetailMapper.getByOrderId(id);
+       orderVO.setOrderDetailList(orderDetail);
+orderVO.setOrderDishes(getsOrderDishes(id));
+        BeanUtils.copyProperties(orders,orderVO);
+        return orderVO;
+    }
+
+    @Override
+    public void delivery(Long id) {
+        orderMapper.update(Orders.builder().id(id).status(Orders.DELIVERY_IN_PROGRESS).build());
+    }
+
+    @Override
+    public void complete(Long id) {
+        orderMapper.update(Orders.builder().id(id).status(Orders.COMPLETED).deliveryTime(LocalDateTime.now()).build());
+    }
+
+    @Override
+    public void cancel(OrdersCancelDTO ordersCancelDTO) {
+        orderMapper.update(Orders.builder().id(ordersCancelDTO.getId()).status(Orders.CANCELLED).cancelReason(ordersCancelDTO.getCancelReason()).cancelTime(LocalDateTime.now()).build());
+    }
+
+    @Override
+    public void rejection(OrdersRejectionDTO ordersRejectionDTO) {
+        orderMapper.update(Orders.builder().id(ordersRejectionDTO.getId()).status(Orders.CANCELLED).rejectionReason(ordersRejectionDTO.getRejectionReason()).build());
     }
 
     public OrderPaymentVO payment(OrdersPaymentDTO ordersPaymentDTO) throws Exception {
@@ -171,8 +201,8 @@ pageResult.setRecords(orderVOList);
 
         orderMapper.update(orders);
     }
-    private String getsOrderDishes() {
-        List<OrderDetail> orderDetailList = orderDetailMapper.getByOrderId(1L);
+    private String getsOrderDishes(Long id) {
+        List<OrderDetail> orderDetailList = orderDetailMapper.getByOrderId(id);
         StringBuilder sb = new StringBuilder();
         for (OrderDetail orderDetail : orderDetailList) {
             sb.append(orderDetail.getName() + "*" + orderDetail.getNumber() + ";");

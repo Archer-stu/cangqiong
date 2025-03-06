@@ -1,7 +1,9 @@
 package com.sky.controller.admin;
 
+import com.sky.dto.OrdersCancelDTO;
 import com.sky.dto.OrdersConfirmDTO;
 import com.sky.dto.OrdersPageQueryDTO;
+import com.sky.dto.OrdersRejectionDTO;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.vo.OrderStatisticsVO;
@@ -36,5 +38,29 @@ public class OrderController {
         orderService.confirm( ordersConfirmDTO.getId());
         return Result.success();
     }
-
+@GetMapping("/details/{id}")
+    public Result<OrderVO> details(@PathVariable("id") Long id) {
+        OrderVO orderVO = orderService.details(id);
+        return Result.success(orderVO);
+    }
+    @PutMapping("/delivery/{id}")
+    public Result delivery(@PathVariable("id") Long id) {
+        orderService.delivery(id);
+        return Result.success();
+    }
+    @PutMapping("/complete/{id}")
+    public Result complete(@PathVariable("id") Long id) {
+        orderService.complete(id);
+        return Result.success();
+    }
+    @PutMapping("/cancel")
+    public Result cancel(@RequestBody OrdersCancelDTO ordersCancelDTO) {
+        orderService.cancel(ordersCancelDTO);
+        return Result.success();
+    }
+    @PutMapping("/rejection")
+    public Result rejection(@RequestBody OrdersRejectionDTO ordersRejectionDTO) {
+        orderService.rejection(ordersRejectionDTO);
+        return Result.success();
+    }
 }
