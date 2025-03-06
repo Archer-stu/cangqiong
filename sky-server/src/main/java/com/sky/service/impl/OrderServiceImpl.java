@@ -115,6 +115,11 @@ pageResult.setRecords(orderVOList);
         return orderStatisticsVO;
     }
 
+    @Override
+    public void confirm(Long id) {
+        orderMapper.changeStatusById(id,Orders.CONFIRMED);
+    }
+
     public OrderPaymentVO payment(OrdersPaymentDTO ordersPaymentDTO) throws Exception {
         // 当前登录用户id
         Long userId = BaseContext.getCurrentId();

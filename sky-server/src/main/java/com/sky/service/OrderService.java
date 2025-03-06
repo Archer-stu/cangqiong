@@ -21,4 +21,6 @@ public interface OrderService {
     PageResult page(OrdersPageQueryDTO ordersPageQueryDTO);
 
     OrderStatisticsVO statistics();
+
+    void confirm(Long id);
 }

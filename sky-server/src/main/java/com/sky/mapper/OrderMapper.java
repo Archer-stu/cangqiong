@@ -6,6 +6,7 @@ import com.sky.entity.Orders;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 @Mapper
 public interface OrderMapper {
@@ -25,4 +26,6 @@ public interface OrderMapper {
     Page<Orders> pageQuery(OrdersPageQueryDTO ordersPageQueryDTO);
 @Select("select count(*) from orders where status=#{toBeConfirmed}")
     Integer countByStatus(Integer toBeConfirmed);
+@Update("update orders set status=#{status} where id=#{id}")
+    void changeStatusById(Long id, Integer status);
 }
