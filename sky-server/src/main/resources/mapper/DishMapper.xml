@@ -66,5 +66,11 @@ select d.*,c.name categoryName from dish d left outer join category c on d.categ
 
 order by d.update_time desc
     </select>
-
+    <select id="countByMap" resultType="java.lang.Integer">
+        select count(id) from dish
+        <where>
+            <if test="status != null"> and status = #{status} </if>
+            <if test="categoryId != null"> and category_id = #{categoryId} </if>
+        </where>
+    </select>
 </mapper>
