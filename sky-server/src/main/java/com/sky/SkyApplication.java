@@ -1,5 +1,6 @@
 package com.sky;
 
+import com.google.common.annotations.VisibleForTesting;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,4 +18,5 @@ public class SkyApplication {
         SpringApplication.run(SkyApplication.class, args);
         log.info("server started");
     }
+
 }
